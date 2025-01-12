@@ -7,35 +7,32 @@ import Loader from '../components/Loader';
 export default function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(true); // Estado de carga
+  const [loading, setLoading] = useState(true);
 
-  // Verificar si el usuario ya está autenticado al montar el componente
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Si el usuario está autenticado, redirigir a Home
         navigation.navigate('Home');
       } else {
-        setLoading(false); // Detener la carga si no hay usuario
+        setLoading(false);
       }
     });
 
-    return () => unsubscribe(); // Limpiar el listener cuando el componente se desmonte
+    return () => unsubscribe();
   }, [navigation]);
 
   const handleLogin = async () => {
-    setLoading(true); // Activar carga cuando se presiona el botón
+    setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setLoading(false); // Detener carga después de inicio de sesión exitoso
+      setLoading(false);
       navigation.navigate('Home');
     } catch (error: any) {
-      setLoading(false); // Detener carga si ocurre un error
+      setLoading(false);
       Alert.alert('Error', error.message);
     }
   };
 
-  // Mostrar Loader solo si estamos cargando
   if (loading) {
     return <Loader />;
   }
